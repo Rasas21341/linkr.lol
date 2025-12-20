@@ -48,7 +48,7 @@
         const username = getUsernameFromHash();
         const container = document.getElementById('profile-container');
         if (!username) {
-            container.innerHTML = '';
+            container.innerHTML = '<div style="color:#fff;text-align:center;">No username provided.</div>';
             return;
         }
         try {
@@ -61,7 +61,7 @@
                 profile = await fetchUserProfile(username.toUpperCase());
             }
             if (!profile) {
-                container.innerHTML = '';
+                container.innerHTML = '<div style="color:#fff;text-align:center;">Profile not found.</div>';
                 return;
             }
             const avatar = profile.avatar || 'https://randomuser.me/api/portraits/men/32.jpg';
@@ -85,7 +85,7 @@
                 ${badgeHtml}
             `;
         } catch (err) {
-            container.innerHTML = '';
+            container.innerHTML = '<div style="color:#fff;text-align:center;">Error loading profile.</div>';
         }
     }
 

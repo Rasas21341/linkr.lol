@@ -36,7 +36,14 @@
     ];
 
     // --- Get username from URL hash ---
-    function getUsernameFromHash() {
+    // --- Get username from URL hash or query parameter ---
+    function getUsername() {
+        // Try query parameter first
+        const params = new URLSearchParams(window.location.search);
+        if (params.has('user')) {
+            return params.get('user');
+        }
+        // Fallback to hash
         const hash = window.location.hash;
         if (hash && hash.length > 1) {
             return hash.slice(1);
@@ -45,7 +52,7 @@
     }
 
     async function renderProfile() {
-        const username = getUsernameFromHash();
+        const username = getUsername();
         const container = document.getElementById('profile-container');
         if (!username) {
             container.innerHTML = '<div style="color:#fff;text-align:center;">No username provided.</div>';

@@ -736,4 +736,19 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+<script>
+// --- Simple client-side router for static hosting ---
+// If the path is /something (not /, /index.html, etc), load profile.html and show that profile
+const allowedMainPages = ['/', '/index.html', '/index', '/sidebar-website/', '/sidebar-website/index.html'];
+if (!allowedMainPages.includes(window.location.pathname.toLowerCase())) {
+    // Only run if not on main page
+    fetch('profile.html')
+        .then(resp => resp.text())
+        .then(html => {
+            document.open();
+            document.write(html);
+            document.close();
+        });
+}
+</script>
 </html>

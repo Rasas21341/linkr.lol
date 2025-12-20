@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | linkr.lol</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body { background: #101014; color: #fff; font-family: 'Inter', sans-serif; }
+        .profile-container { max-width: 420px; margin: 60px auto; background: #181b22; border-radius: 18px; box-shadow: 0 4px 32px #0008; padding: 36px 32px; text-align: center; }
+        .profile-avatar { width: 96px; height: 96px; border-radius: 50%; border: 3px solid #23272f; object-fit: cover; margin-bottom: 18px; }
+        .profile-username { font-size: 2rem; font-weight: 800; margin-bottom: 6px; }
+        .profile-bio { color: #a1a1aa; font-size: 1.08rem; margin-bottom: 18px; }
+        .profile-badges { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; margin-top: 18px; }
+        .profile-badge { background: #23272f; color: #fff; border-radius: 10px; padding: 8px 14px; font-size: 1.1em; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 8px #0002; }
+    </style>
+</head>
+<body>
+    <div class="profile-container" id="profile-container">
+        <div>Loading profile...</div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+    <script src="supabase.js"></script>
+    <script>
+    // --- Badge Definitions (should match main app) ---
+    const BADGE_DEFS = [
+        { key: 'premium', icon: '👑', label: 'Premium' },
+        { key: 'verified', icon: '✔️', label: 'Verified' },
+        { key: 'early', icon: '✨', label: 'Early Adopter' },
+        { key: 'staff', icon: '🛡️', label: 'Staff' },
+        { key: 'owner', icon: '👑', label: 'Owner' },
+        { key: 'fire', icon: '🔥', label: 'On Fire' },
+        { key: 'popular', icon: '★', label: 'Popular', svg: true },
+        { key: 'christmas', img: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f36d.png', label: 'Christmas Of 2025' }
+    ];
+
+    // --- Get username from URL path ---
+    function getUsernameFromPath() {
+        const path = window.location.pathname;
+        // e.g. /ryan or /theboyrp1234
+        if (path.startsWith('/')) {
+            return path.slice(1);
+        }
+        return path;
+    }
+
+    async function renderProfile() {
+        const username = getUsernameFromPath();
+        const container = document.getElementById('profile-container');
+        if (!username) {
+            container.innerHTML = '<div>No username provided.</div>';
+            return;
+        }
+        try {
+            const profile = await fetchUserProfile(username);
+            if (!profile) {
+                container.innerHTML = '<div>Profile not found.</div>';
+                return;
+            }
+            const avatar = profile.avatar || 'https://randomuser.me/api/portraits/men/32.jpg';
+            const bio = profile.bio || '';
+            const badges = Array.isArray(profile.badges) ? profile.badges : [];
+            let badgeHtml = '';
+            if (badges.length > 0) {
+                badgeHtml = '<div class="profile-badges">' +
+                    BADGE_DEFS.filter(b => badges.includes(b.key)).map(badge => {
+                        if (badge.img) {
+                            return `<span class="profile-badge"><img src="${badge.img}" alt="${badge.label}" style="width:22px;height:22px;vertical-align:middle;"> ${badge.label}</span>`;
+                        } else if (badge.svg) {
+                            return `<span class="profile-badge"><svg width="18" height="18" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;"><path d='M16 4 L19.09 12.26 L28 12.27 L21 18.14 L23.18 26.02 L16 21.77 L8.82 26.02 L11 18.14 L4 12.27 L12.91 12.26 Z' stroke='#22c55e' stroke-width='2.5' fill='none'/></svg> ${badge.label}</span>`;
+                        } else {
+                            return `<span class="profile-badge">${badge.icon} ${badge.label}</span>`;
+                        }
+                    }).join('') + '</div>';
+            }
+            container.innerHTML = `
+                <img class="profile-avatar" src="${avatar}" alt="Avatar">
+                <div class="profile-username">${username}</div>
+                <div class="profile-bio">${bio}</div>
+                ${badgeHtml}
+            `;
+        } catch (err) {
+            container.innerHTML = '<div>Error loading profile.</div>';
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', renderProfile);
+    </script>
+</body>
+</html>

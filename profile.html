@@ -20,8 +20,7 @@
     <div class="profile-container" id="profile-container">
         <!-- Profile content will be injected here -->
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
-    <script src="supabase.js"></script>
+    <!-- Only load supabase.js once per page, and avoid duplicate BADGE_DEFS -->
     <script>
     // --- Badge Definitions (should match main app) ---
     const BADGE_DEFS = [
@@ -59,7 +58,6 @@
             return;
         }
         try {
-            // Try both lowercase and original username
             let profile = await fetchUserProfile(username);
             if (!profile && username.toLowerCase() !== username) {
                 profile = await fetchUserProfile(username.toLowerCase());
@@ -71,12 +69,11 @@
                 container.innerHTML = '<div style="color:#fff;text-align:center;">Profile not found.</div>';
                 return;
             }
-            // Only show if user has set profile.avatar and profile.username
             const avatar = profile.avatar ? `<img class=\"profile-avatar\" src=\"${profile.avatar}\" alt=\"Avatar\">` : '';
             const usernameHtml = profile.username ? `<div class=\"profile-username\">${profile.username}</div>` : '';
             const badges = Array.isArray(profile.badges) ? profile.badges : [];
             let badgeHtml = '';
-            if (badges.length > 0) {
+            if (badges.length > 0 && container) {
                 badgeHtml = '<div class="profile-badges">' +
                     BADGE_DEFS.filter(b => badges.includes(b.key)).map(badge => {
                         if (badge.img) {

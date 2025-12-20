@@ -23,7 +23,7 @@
     <!-- Only load supabase.js once per page, and avoid duplicate BADGE_DEFS -->
     <script>
     // --- Badge Definitions (should match main app) ---
-    const BADGE_DEFS = [
+    window.BADGE_DEFS = [
         { key: 'premium', icon: '👑', label: 'Premium' },
         { key: 'verified', icon: '✔️', label: 'Verified' },
         { key: 'early', icon: '✨', label: 'Early Adopter' },
@@ -75,7 +75,7 @@
             let badgeHtml = '';
             if (badges.length > 0 && container) {
                 badgeHtml = '<div class="profile-badges">' +
-                    BADGE_DEFS.filter(b => badges.includes(b.key)).map(badge => {
+                    window.BADGE_DEFS.filter(b => badges.includes(b.key)).map(badge => {
                         if (badge.img) {
                             return `<span class=\"profile-badge\"><img src=\"${badge.img}\" alt=\"${badge.label}\" style=\"width:22px;height:22px;vertical-align:middle;\"> ${badge.label}</span>`;
                         } else if (badge.svg) {

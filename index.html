@@ -311,7 +311,7 @@
                     <div id="badges-list" style="display:flex;flex-wrap:wrap;gap:18px;"></div>
                 <script>
                 // --- Badge Toggle Logic ---
-                const BADGE_DEFS = [
+                window.BADGE_DEFS = [
                     { key: 'premium', icon: '👑', label: 'Premium' },
                     { key: 'verified', icon: '✔️', label: 'Verified' },
                     { key: 'early', icon: '✨', label: 'Early Adopter' },
@@ -331,7 +331,7 @@
                     let badges = Array.isArray(profile.badges) ? profile.badges : [];
                     const badgesList = document.getElementById('badges-list');
                     badgesList.innerHTML = '';
-                    BADGE_DEFS.forEach(badge => {
+                    window.BADGE_DEFS.forEach(badge => {
                         const isActive = badges.includes(badge.key);
                         const div = document.createElement('div');
                         div.className = 'badge-toggle';

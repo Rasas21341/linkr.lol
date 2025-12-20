@@ -737,18 +737,21 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 <script>
-// --- Simple client-side router for static hosting ---
-// If the path is /something (not /, /index.html, etc), load profile.html and show that profile
-const allowedMainPages = ['/', '/index.html', '/index', '/sidebar-website/', '/sidebar-website/index.html'];
-if (!allowedMainPages.includes(window.location.pathname.toLowerCase())) {
-    // Only run if not on main page
-    fetch('profile.html')
-        .then(resp => resp.text())
-        .then(html => {
-            document.open();
-            document.write(html);
-            document.close();
-        });
+// --- Hash-based router for static hosting ---
+// If the URL hash is set (e.g., #ryan), load profile.html and show that profile
+function handleHashProfileRouting() {
+    const hash = window.location.hash;
+    if (hash && hash.length > 1) {
+        fetch('profile.html')
+            .then(resp => resp.text())
+            .then(html => {
+                document.open();
+                document.write(html);
+                document.close();
+            });
+    }
 }
+window.addEventListener('DOMContentLoaded', handleHashProfileRouting);
+window.addEventListener('hashchange', handleHashProfileRouting);
 </script>
 </html>

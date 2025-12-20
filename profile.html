@@ -35,18 +35,17 @@
         { key: 'christmas', img: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f36d.png', label: 'Christmas Of 2025' }
     ];
 
-    // --- Get username from URL path ---
-    function getUsernameFromPath() {
-        const path = window.location.pathname;
-        // e.g. /ryan or /theboyrp1234
-        if (path.startsWith('/')) {
-            return path.slice(1);
+    // --- Get username from URL hash ---
+    function getUsernameFromHash() {
+        const hash = window.location.hash;
+        if (hash && hash.length > 1) {
+            return hash.slice(1);
         }
-        return path;
+        return '';
     }
 
     async function renderProfile() {
-        const username = getUsernameFromPath();
+        const username = getUsernameFromHash();
         const container = document.getElementById('profile-container');
         if (!username) {
             container.innerHTML = '<div>No username provided.</div>';
@@ -85,7 +84,8 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', renderProfile);
+    window.addEventListener('DOMContentLoaded', renderProfile);
+    window.addEventListener('hashchange', renderProfile);
     </script>
 </body>
 </html>

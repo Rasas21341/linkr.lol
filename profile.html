@@ -42,6 +42,9 @@
         if (params.has('user')) {
             return params.get('user');
         }
+        if (params.has('username')) {
+            return params.get('username');
+        }
         // Fallback to hash
         const hash = window.location.hash;
         if (hash && hash.length > 1) {

@@ -52,7 +52,14 @@
             return;
         }
         try {
-            const profile = await fetchUserProfile(username);
+            // Try both lowercase and original username
+            let profile = await fetchUserProfile(username);
+            if (!profile && username.toLowerCase() !== username) {
+                profile = await fetchUserProfile(username.toLowerCase());
+            }
+            if (!profile && username.toUpperCase() !== username) {
+                profile = await fetchUserProfile(username.toUpperCase());
+            }
             if (!profile) {
                 container.innerHTML = '<div>Profile not found.</div>';
                 return;
@@ -75,7 +82,7 @@
             }
             container.innerHTML = `
                 <img class="profile-avatar" src="${avatar}" alt="Avatar">
-                <div class="profile-username">${username}</div>
+                <div class="profile-username">${profile.username || username}</div>
                 <div class="profile-bio">${bio}</div>
                 ${badgeHtml}
             `;

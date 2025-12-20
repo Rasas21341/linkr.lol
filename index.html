@@ -312,7 +312,7 @@
                 <script>
                 // --- Badge Toggle Logic ---
                 window.BADGE_DEFS = [
-                    { key: 'premium', icon: '👑', label: 'Premium' },
+                    { key: 'premium', img: 'https://cdn3.emoji.gg/emojis/32212-premiumroleicon.png', label: 'Premium' },
                     { key: 'verified', icon: '✔️', label: 'Verified' },
                     { key: 'early', icon: '✨', label: 'Early Adopter' },
                     { key: 'staff', icon: '🛡️', label: 'Staff' },
@@ -338,6 +338,8 @@
                         div.style = `background:${isActive ? '#a3e635' : '#23272f'};border-radius:10px;padding:10px 8px;min-width:60px;text-align:center;color:#fff;box-shadow:0 2px 8px #0002;position:relative;cursor:pointer;opacity:${isActive ? 1 : 0.7};border:${isActive ? '2px solid #fff' : 'none'};transition:all 0.2s;`;
                         if (badge.img) {
                             div.innerHTML = `<img src="${badge.img}" alt="${badge.label}" style="width:32px;height:32px;display:block;margin:0 auto;"><br>${badge.label}`;
+                        } else if (badge.svg && badge.svgMarkup) {
+                            div.innerHTML = `${badge.svgMarkup}<br>${badge.label}`;
                         } else if (badge.svg) {
                             div.innerHTML = `<span style="font-size:1.1em;display:inline-block;"><svg width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;"><path d='M16 4 L19.09 12.26 L28 12.27 L21 18.14 L23.18 26.02 L16 21.77 L8.82 26.02 L11 18.14 L4 12.27 L12.91 12.26 Z' stroke='#22c55e' stroke-width='2.5' fill='none'/></svg></span><br>${badge.label}`;
                         } else {

@@ -1,3 +1,47 @@
+<script>
+// --- Client-side routing for clean profile URLs ---
+document.addEventListener('DOMContentLoaded', function() {
+    const path = window.location.pathname.replace(/^\//, '');
+    // Only run if not on index.html, profile.html, or other known pages
+    const knownPages = ['index.html', 'profile.html', 'changelogs.html', 'style.css', 'supabase.js'];
+    if (path && !knownPages.includes(path)) {
+        // Dynamically load profile.html content for /username
+        fetch('profile.html')
+            .then(res => res.text())
+            .then(html => {
+                // Extract the profile container and scripts
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = html;
+                const profileContainer = tempDiv.querySelector('.profile-container');
+                document.body.innerHTML = '';
+                document.body.appendChild(profileContainer);
+                // Load Supabase and profile logic
+                const supabaseScript = tempDiv.querySelector('script[src*="supabase"]');
+                const supabaseCdnScript = tempDiv.querySelector('script[src*="supabase-js"]');
+                if (supabaseCdnScript) {
+                    const scriptTag = document.createElement('script');
+                    scriptTag.src = supabaseCdnScript.src;
+                    document.body.appendChild(scriptTag);
+                }
+                if (supabaseScript) {
+                    const scriptTag = document.createElement('script');
+                    scriptTag.src = supabaseScript.src;
+                    document.body.appendChild(scriptTag);
+                }
+                // Inject profile logic
+                const scripts = tempDiv.querySelectorAll('script:not([src])');
+                scripts.forEach(script => {
+                    const inlineScript = document.createElement('script');
+                    inlineScript.textContent = script.textContent;
+                    document.body.appendChild(inlineScript);
+                });
+                // Set username for profile logic
+                window.history.replaceState({}, '', '/' + path);
+                window.location.search = '?username=' + encodeURIComponent(path);
+            });
+    }
+});
+</script>
 <!DOCTYPE html>
 <html lang="en">
 <head>

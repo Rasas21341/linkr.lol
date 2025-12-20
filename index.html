@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <style>
+        /* Change Log Modal Styles */
+        #changelog-modal-bg {
+            display: none; position: fixed; z-index: 3000; left: 0; top: 0; width: 100vw; height: 100vh;
+            background: rgba(16,18,24,0.85); align-items: center; justify-content: center;
+        }
+        #changelog-modal {
+            background: #101426; border-radius: 18px; padding: 32px 32px 24px 32px; min-width: 340px; max-width: 95vw;
+            box-shadow: 0 4px 32px #000a; color: #fff; position: relative;
+        }
+        #changelog-modal h2 { margin: 0 0 12px 0; font-size: 1.3rem; font-weight: 700; }
+        #changelog-modal .changelog-meta { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+        #changelog-modal .changelog-version {
+            background: #23273a; color: #b3b8c5; border-radius: 12px; padding: 4px 14px; font-size: 0.98rem; font-weight: 600;
+            margin-right: 8px;
+        }
+        #changelog-modal .changelog-time { color: #b3b8c5; font-size: 0.98rem; }
+        #changelog-modal .changelog-desc { color: #d1d5db; font-size: 1.05rem; margin-bottom: 8px; }
+        #changelog-modal .close-btn {
+            position: absolute; top: 16px; right: 18px; background: none; border: none; color: #b3b8c5; font-size: 1.5rem; cursor: pointer;
+        }
+        /* Landing area changelog card */
+        .landing-changelog-card {
+            background: #101426; border-radius: 16px; border: 1px solid #3b4152; color: #fff; padding: 18px 24px 14px 24px; margin: 18px auto 0 auto; max-width: 800px; box-shadow: 0 2px 12px #0002;
+            display: flex; flex-direction: column; gap: 8px; position: relative;
+        }
+        .landing-changelog-card .changelog-title { font-size: 1.18rem; font-weight: 700; margin-bottom: 4px; }
+        .landing-changelog-card .changelog-meta { display: flex; align-items: center; gap: 12px; }
+        .landing-changelog-card .changelog-version {
+            background: #23273a; color: #b3b8c5; border-radius: 10px; padding: 3px 12px; font-size: 0.95rem; font-weight: 600;
+        }
+        .landing-changelog-card .changelog-time { color: #b3b8c5; font-size: 0.95rem; }
+        .landing-changelog-card .expand-arrow { position: absolute; right: 18px; top: 18px; color: #b3b8c5; font-size: 1.2rem; }
+        </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sidebar Website</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body>
+            <!-- Change Log Modal -->
+            <div id="changelog-modal-bg">
+                <div id="changelog-modal">
+                    <button class="close-btn" onclick="document.getElementById('changelog-modal-bg').style.display='none'">&times;</button>
+                    <h2 id="changelog-title">Spring Update: Part I</h2>
+                    <div class="changelog-meta">
+                        <span class="changelog-version">v3.5.0</span>
+                        <span class="changelog-time">10 months ago</span>
+                    </div>
+                    <div class="changelog-desc">This update introduces new features, performance improvements, and bug fixes for a smoother experience.</div>
+                </div>
+            </div>
+        <div id="landing-area" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#101014;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+            <div style="width:100vw;position:absolute;top:0;left:0;height:70px;background:#18181c;display:flex;align-items:center;justify-content:space-between;padding:0 48px;box-sizing:border-box;">
+                <span style="font-size:2rem;font-weight:800;color:#fff;letter-spacing:-2px;">linkr<span style="color:#a3e635;">.lol</span></span>
+                <div style="display:flex;align-items:center;gap:32px;">
+                    <a href="#" style="color:#fff;font-size:1rem;text-decoration:none;opacity:0.8;">Features</a>
+                    <a href="changelogs.html" style="color:#fff;font-size:1rem;text-decoration:none;opacity:0.8;">Change Logs</a>
+                    <a href="#" style="color:#fff;font-size:1rem;text-decoration:none;opacity:0.8;">Pricing</a>
+                    <a href="#" style="color:#fff;font-size:1rem;text-decoration:none;opacity:0.8;">Discord</a>
+                    <a href="#" id="landing-login" style="color:#fff;font-size:1rem;text-decoration:none;opacity:0.8;margin-left:24px;">Login</a>
+                    <a href="#" style="background:#3b82f6;color:#fff;font-size:1rem;font-weight:600;padding:8px 22px;border-radius:22px;text-decoration:none;margin-left:8px;">Sign Up Free</a>
+                </div>
+            </div>
+            <div style="margin-top:90px;text-align:center;width:100vw;">
+                        <!-- Removed landing changelog card -->
+                <div style="margin-bottom:18px;">
+                    <span style="background:rgba(220,38,38,0.08);color:#ef4444;padding:6px 18px;border-radius:18px;font-size:1rem;font-weight:500;">⚡ The future of link-in-bio</span>
+                </div>
+                <div style="font-size:4rem;font-weight:900;color:#fff;letter-spacing:-3px;">Linkr</div>
+                <div style="font-size:3rem;font-weight:900;color:#a3e635;margin-top:-18px;margin-bottom:18px;">.lol</div>
+                <div style="font-size:1.3rem;font-weight:700;color:#fff;margin-bottom:18px;">Build your digital identity with style</div>
+                <div style="color:#a1a1aa;font-size:1.08rem;margin-bottom:32px;">Create a stunning biolink page that showcases everything that makes you unique. Fast, beautiful, and completely customizable.</div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:0.5em;margin-bottom:18px;">
+                    <div style="background:#23272f;padding:10px 18px;border-radius:18px 0 0 18px;color:#fff;font-size:1.08rem;">linkr.lol/</div>
+                    <input type="text" placeholder="yourname" style="padding:10px 18px;border:none;border-radius:0 18px 18px 0;background:#23272f;color:#fff;font-size:1.08rem;width:180px;outline:none;">
+                    <button style="background:#3b82f6;color:#fff;font-size:1.08rem;font-weight:600;padding:10px 22px;border-radius:18px;border:none;margin-left:8px;cursor:pointer;">Claim Now</button>
+                </div>
+                <div style="color:#a1a1aa;font-size:0.98rem;margin-bottom:32px;">Join 10+ creators already using linkr.lol</div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:32px;">
+                    <span>10+ <span style="color:#a1a1aa;font-weight:500;">users</span></span>
+                    <span>0+ <span style="color:#a1a1aa;font-weight:500;">links</span></span>
+                    <span>1.2K+ <span style="color:#a1a1aa;font-weight:500;">views</span></span>
+                </div>
+            </div>
+        </div>
+    <div class="sidebar">
+        <div class="main-section">
+            <div class="section-title">MAIN</div>
+            <nav class="nav">
+                <a href="#" class="nav-link active"><span class="icon"><i class="fas fa-home"></i></span>Overview</a>
+                <a href="#" class="nav-link"><span class="icon"><i class="fas fa-user"></i></span>Profile</a>
+                <a href="#" class="nav-link"><span class="icon"><i class="fas fa-link"></i></span>Links</a>
+                <a href="#" class="nav-link"><span class="icon"><i class="far fa-clock"></i></span>Appearance</a>
+                <a href="#" class="nav-link"><span class="icon"><i class="fas fa-chart-bar"></i></span>Analytics</a>
+                <a href="#" class="nav-link"><span class="icon"><i class="fas fa-table"></i></span>Templates</a>
+                <a href="#" class="nav-link settings settings-link"><span class="icon"><i class="fas fa-cog"></i></span>Settings</a>
+                <a href="#" class="nav-link staff-link" style="display:none;"><span class="icon"><i class="fas fa-user-shield"></i></span>Staff</a>
+            </nav>
+        </div>
+        <div class="user-section">
+            <div class="user-card">
+                <img class="user-avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="User Avatar">
+                <div class="user-info">
+                    <div style="display:flex;align-items:center;gap:8px;position:relative;">
+                        <span class="user-name" id="sidebar-username">theboyrp1234</span>
+                        <div id="profile-hover-panel" style="display:none;position:fixed;top:80px;right:40px;width:320px;background:#181b22;border-radius:18px;box-shadow:0 4px 32px #0008;padding:24px 24px 18px 24px;z-index:9999;transition:opacity 0.2s;">
+                            <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;">
+                                <img id="hover-profile-avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Profile Picture" style="width:64px;height:64px;border-radius:50%;border:2px solid #a78bfa;">
+                                <div>
+                                    <div id="hover-profile-username" style="font-size:1.2rem;font-weight:700;color:#fff;">theboyrp1234</div>
+                                    <div id="hover-profile-created" style="color:#a1a1aa;font-size:0.98rem;">Created: 2025-01-01</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Promote Popup Modal -->
+                    <div id="promote-modal-bg" style="display:none;position:fixed;z-index:5000;left:0;top:0;width:100vw;height:100vh;background:rgba(16,18,24,0.85);align-items:center;justify-content:center;">
+                        <div id="promote-modal" style="background:#101426;border-radius:18px;padding:32px 32px 24px 32px;min-width:320px;max-width:95vw;box-shadow:0 4px 32px #000a;color:#fff;position:relative;">
+                            <button class="close-btn" onclick="document.getElementById('promote-modal-bg').style.display='none'" style="position:absolute;top:16px;right:18px;background:none;border:none;color:#b3b8c5;font-size:1.5rem;cursor:pointer;">&times;</button>
+                            <h2 style="margin:0 0 18px 0;font-size:1.2rem;font-weight:700;">Promote User</h2>
+                            <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:18px;">
+                                <label style="display:flex;align-items:center;gap:10px;font-size:1.08rem;">
+                                    <input type="checkbox" id="role-owner" style="accent-color:#a3e635;width:18px;height:18px;"> Owner
+                                </label>
+                                <label style="display:flex;align-items:center;gap:10px;font-size:1.08rem;">
+                                    <input type="checkbox" id="role-coowner" style="accent-color:#60a5fa;width:18px;height:18px;"> Co Owner
+                                </label>
+                                <label style="display:flex;align-items:center;gap:10px;font-size:1.08rem;">
+                                    <input type="checkbox" id="role-staff" style="accent-color:#f59e42;width:18px;height:18px;"> Staff
+                                </label>
+                            </div>
+                            <button id="save-role-btn" style="background:#22c55e;color:#fff;font-size:1rem;font-weight:600;padding:10px 0;border-radius:10px;border:none;width:100%;cursor:pointer;">Save</button>
+                        </div>
+                    </div>
+                    <script>
+                    // (Sidebar username View button logic removed. Staff user list logic is below.)
+                    document.getElementById('save-role-btn').onclick = async function() {
+                        // Save role logic to Supabase
+                        const owner = document.getElementById('role-owner').checked;
+                        const coowner = document.getElementById('role-coowner').checked;
+                        const staff = document.getElementById('role-staff').checked;
+                        const promoteModalBg = document.getElementById('promote-modal-bg');
+                        const username = promoteModalBg.getAttribute('data-username');
+                        try {
+                            // Update roles
+                            await updateUserProfile(username, { role_owner: owner, role_coowner: coowner, role_staff: staff });
+                            // Unlock badges if owner or coowner
+                            let profile = await fetchUserProfile(username);
+                            let badges = Array.isArray(profile.badges) ? profile.badges : [];
+                            let unlocked = [];
+                            if (owner && !badges.includes('owner')) {
+                                badges.push('owner');
+                                unlocked.push('Owner badge');
+                            }
+                            if (coowner && !badges.includes('verified')) {
+                                badges.push('verified');
+                                unlocked.push('Verified badge');
+                            }
+                            if (unlocked.length > 0) {
+                                await updateUserProfile(username, { badges });
+                            }
+                            alert('Saved!\nOwner: ' + owner + '\nCo Owner: ' + coowner + '\nStaff: ' + staff + (unlocked.length > 0 ? '\nUnlocked: ' + unlocked.join(', ') + '!' : ''));
+                        } catch (err) {
+                            alert('Error saving roles: ' + err.message);
+                        }
+                        promoteModalBg.style.display = 'none';
+                    };
+                    </script>
+                    <div class="user-plan" id="sidebar-plan">Free Plan</div>
+                </div>
+            </div>
+            <a href="#" class="logout-link"><i class="fas fa-sign-out-alt"></i>Logout</a>
+        </div>
+    </div>
+    <div class="main-content">
+        <div id="overview-dashboard" style="display: none;">
+            <div style="display: flex; align-items: center; background: #181b22; border-radius: 18px; padding: 24px 32px; margin-bottom: 24px;">
+                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User Avatar" style="width: 56px; height: 56px; border-radius: 50%; border: 3px solid #23272f; margin-right: 24px;">
+                <div>
+                    <div style="font-size: 1.5rem; font-weight: 700; color: #fff;">Welcome back, theboyrp1234</div>
+                    <div style="color: #9ca3af; font-size: 1rem;">Manage your profile and track your performance</div>
+                </div>
+                <a href="#" style="margin-left:auto; color:#d1d5db; font-size:0.95rem; text-decoration:none; border:1px solid #23272f; border-radius:8px; padding:8px 18px;">View Profile</a>
+            </div>
+            <div style="background:#181b22; border-radius:14px; padding:18px 28px; margin-bottom:18px; display:flex; align-items:center; gap:18px;">
+                <div style="color:#6b7280; font-size:0.95rem;">YOUR PROFILE URL</div>
+                <div id="profile-url-display" style="color:#fff; font-weight:600; font-size:1.05rem;">linkr.lol/</div>
+                <button id="copy-profile-url-btn" style="margin-left:auto; background:#ef4444; color:#fff; border:none; border-radius:8px; padding:7px 18px; font-weight:600; cursor:pointer;">Copy</button>
+            </div>
+            <div style="display:flex; gap:18px; margin-bottom:18px;">
+                <div style="flex:1; background:#181b22; border-radius:14px; padding:18px; text-align:center;">
+                    <div style="color:#fff; font-size:1.2rem; font-weight:700;">0</div>
+                    <div style="color:#6b7280; font-size:0.95rem;">Total Views</div>
+                </div>
+                <div style="flex:1; background:#181b22; border-radius:14px; padding:18px; text-align:center;">
+                    <div style="color:#fff; font-size:1.2rem; font-weight:700;">0</div>
+                    <div style="color:#6b7280; font-size:0.95rem;">Link Clicks</div>
+                </div>
+                <div style="flex:1; background:#181b22; border-radius:14px; padding:18px; text-align:center;">
+                    <div style="color:#fff; font-size:1.2rem; font-weight:700;">0</div>
+                    <div style="color:#6b7280; font-size:0.95rem;">Total Links</div>
+                </div>
+                <div style="flex:1; background:#181b22; border-radius:14px; padding:18px; text-align:center;">
+                    <div style="color:#fff; font-size:1.2rem; font-weight:700;">0</div>
+                    <div style="color:#6b7280; font-size:0.95rem;">Unique Visitors</div>
+                </div>
+            </div>
+            <div style="display:flex; gap:18px;">
+                <div style="flex:1; background:#181b22; border-radius:14px; padding:18px;">
+                    <div style="color:#fff; font-weight:600; margin-bottom:10px;">Live Preview <span style="color:#22c55e; font-size:0.9em;">● Live</span></div>
+                    <div style="background:#11131a; border-radius:18px; padding:32px 0; text-align:center;">
+                        <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User Avatar" style="width:64px; height:64px; border-radius:50%; border:2px solid #a78bfa; margin-bottom:10px;">
+                        <div style="color:#fff; font-size:1.1rem; font-weight:700;">theboyrp1234</div>
+                        <div style="color:#a1a1aa; font-size:0.95rem;">@theboyrp1234</div>
+                        <div id="live-preview-bio" style="color:#a1a1aa; font-size:0.95rem; margin:10px 0 0 0;">I'm Ryan, I'm chill, man. I just love testing website ideas.</div>
+                        <div style="color:#6b7280; font-size:0.95rem; margin-top:10px;">No links yet</div>
+                    </div>
+                </div>
+                <div style="flex:2; display:flex; flex-direction:column; gap:18px;">
+                    <div style="background:#181b22; border-radius:14px; padding:18px;">
+                        <div style="color:#fff; font-weight:600; margin-bottom:10px;">Quick Actions</div>
+                        <div style="display:flex; flex-direction:column; gap:10px;">
+                            <div style="display:flex; align-items:center; background:#23272f; border-radius:8px; padding:10px 16px; color:#fff; gap:12px; font-weight:500;"><span style="background:#ef4444; color:#fff; border-radius:6px; padding:4px 8px; font-size:1.1em; margin-right:8px;">+</span>Add New Link <span style="color:#a1a1aa; font-size:0.95em; margin-left:auto;">Create a new link for your profile</span></div>
+                            <div style="display:flex; align-items:center; background:#23272f; border-radius:8px; padding:10px 16px; color:#fff; gap:12px; font-weight:500;"><span style="background:#a78bfa; color:#fff; border-radius:6px; padding:4px 8px; font-size:1.1em; margin-right:8px;">🎨</span>Customize Theme <span style="color:#a1a1aa; font-size:0.95em; margin-left:auto;">Change colors and effects</span></div>
+                            <div style="display:flex; align-items:center; background:#23272f; border-radius:8px; padding:10px 16px; color:#fff; gap:12px; font-weight:500;"><span style="background:#f472b6; color:#fff; border-radius:6px; padding:4px 8px; font-size:1.1em; margin-right:8px;">👤</span>Edit Profile <span style="color:#a1a1aa; font-size:0.95em; margin-left:auto;">Update bio and avatar</span></div>
+                            <div style="display:flex; align-items:center; background:#23272f; border-radius:8px; padding:10px 16px; color:#fff; gap:12px; font-weight:500;"><span style="background:#34d399; color:#fff; border-radius:6px; padding:4px 8px; font-size:1.1em; margin-right:8px;">📝</span>Change Log <span style="color:#a1a1aa; font-size:0.95em; margin-left:auto;">View recent updates</span></div>
+                        </div>
+                    </div>
+                    <div style="background:#181b22; border-radius:14px; padding:18px; min-height:100px;">
+                        <div style="color:#fff; font-weight:600; margin-bottom:10px;">Top Performing Links</div>
+                        <div style="color:#a1a1aa;">No links yet. <a href="#" style="color:#ef4444;">Add your first link</a></div>
+                        <a href="#" style="color:#ef4444; float:right; font-size:0.95em;">View Analytics</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="main-placeholder"></div>
+        <div id="profile-section" style="display:none;">
+            <div style="display:flex;gap:32px;">
+                <div style="flex:1;background:#181b22;padding:32px 28px;border-radius:18px;box-shadow:0 4px 32px #0006;min-width:340px;">
+                    <div style="display:flex;align-items:center;gap:18px;margin-bottom:24px;">
+                        <div style="position:relative;">
+                            <img id="profile-avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Avatar" style="width:80px;height:80px;border-radius:50%;border:3px solid #23272f;object-fit:cover;">
+                            <span id="avatar-edit-btn" style="position:absolute;bottom:6px;right:6px;background:#ef4444;color:#fff;border-radius:50%;padding:6px;cursor:pointer;font-size:1.1em;border:2px solid #fff;">✏️</span>
+                            <input type="file" id="avatar-upload" accept="image/*" style="display:none;">
+                        </div>
+                        <div style="color:#a1a1aa;font-size:0.98rem;">Click to change avatar<br><span style="font-size:0.95em;">JPG, PNG or GIF. Max 2MB.</span></div>
+                    </div>
+                    <div style="margin-bottom:18px;">
+                        <label style="color:#fff;font-weight:600;">Display Name</label><br>
+                        <input id="profile-displayname" type="text" value="theboyrp1234" style="width:100%;margin-top:6px;padding:10px 14px;border-radius:8px;border:none;background:#23272f;color:#fff;font-size:1rem;">
+                    </div>
+                    <div style="margin-bottom:18px;">
+                        <label style="color:#fff;font-weight:600;">Username</label><br>
+                        <input id="profile-username" type="text" value="linkr.lol/theboyrp1234" style="width:100%;margin-top:6px;padding:10px 14px;border-radius:8px;border:none;background:#11131a;color:#fff;font-size:1rem;" readonly>
+                    </div>
+                    <div style="margin-bottom:18px;">
+                        <label style="color:#fff;font-weight:600;">Bio</label><br>
+                        <textarea id="profile-bio" style="width:100%;margin-top:6px;padding:10px 14px;border-radius:8px;border:none;background:#23272f;color:#fff;font-size:1rem;resize:none;" rows="3">I'm Ryan, I'm chill, man. I just love testing website ideas.</textarea>
+                        <div style="color:#6b7280;font-size:0.95em;">60/150 characters</div>
+                    </div>
+                    <div style="margin-bottom:18px;">
+                        <label style="color:#fff;font-weight:600;">Location</label><br>
+                        <input type="text" placeholder="City, Country" style="width:100%;margin-top:6px;padding:10px 14px;border-radius:8px;border:none;background:#23272f;color:#fff;font-size:1rem;">
+                    </div>
+                    <button id="profile-save-btn" style="background:#60a5fa;color:#fff;padding:10px 0;border:none;border-radius:8px;width:100%;font-size:1.1rem;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">✔️ Save Changes</button>
+                </div>
+                <div style="flex:1.2;background:#181b22;padding:32px 28px;border-radius:18px;box-shadow:0 4px 32px #0006;min-width:340px;">
+                    <div style="color:#fff;font-weight:600;margin-bottom:18px;">Your Badges</div>
+                    <div style="color:#a1a1aa;font-size:0.98rem;margin-bottom:18px;">Select which badges to display on your profile</div>
+                    <div id="badges-list" style="display:flex;flex-wrap:wrap;gap:18px;"></div>
+                <script>
+                // --- Badge Toggle Logic ---
+                const BADGE_DEFS = [
+                    { key: 'premium', icon: '👑', label: 'Premium' },
+                    { key: 'verified', icon: '✔️', label: 'Verified' },
+                    { key: 'early', icon: '✨', label: 'Early Adopter' },
+                    { key: 'staff', icon: '🛡️', label: 'Staff' },
+                    { key: 'owner', icon: '👑', label: 'Owner' },
+                    { key: 'fire', icon: '🔥', label: 'On Fire' },
+                    { key: 'popular', icon: '★', label: 'Popular', svg: true },
+                    { key: 'christmas', img: 'https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f36d.png', label: 'Christmas Of 2025' }
+                ];
+
+                async function renderBadgesList() {
+                    const username = document.getElementById('sidebar-username').textContent;
+                    let profile = {};
+                    try {
+                        profile = await fetchUserProfile(username) || {};
+                    } catch {}
+                    let badges = Array.isArray(profile.badges) ? profile.badges : [];
+                    const badgesList = document.getElementById('badges-list');
+                    badgesList.innerHTML = '';
+                    BADGE_DEFS.forEach(badge => {
+                        const isActive = badges.includes(badge.key);
+                        const div = document.createElement('div');
+                        div.className = 'badge-toggle';
+                        div.style = `background:${isActive ? '#a3e635' : '#23272f'};border-radius:10px;padding:10px 8px;min-width:60px;text-align:center;color:#fff;box-shadow:0 2px 8px #0002;position:relative;cursor:pointer;opacity:${isActive ? 1 : 0.7};border:${isActive ? '2px solid #fff' : 'none'};transition:all 0.2s;`;
+                        if (badge.img) {
+                            div.innerHTML = `<img src="${badge.img}" alt="${badge.label}" style="width:32px;height:32px;display:block;margin:0 auto;"><br>${badge.label}`;
+                        } else if (badge.svg) {
+                            div.innerHTML = `<span style="font-size:1.1em;display:inline-block;"><svg width="22" height="22" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;"><path d='M16 4 L19.09 12.26 L28 12.27 L21 18.14 L23.18 26.02 L16 21.77 L8.82 26.02 L11 18.14 L4 12.27 L12.91 12.26 Z' stroke='#22c55e' stroke-width='2.5' fill='none'/></svg></span><br>${badge.label}`;
+                        } else {
+                            div.innerHTML = `<span style="font-size:1.1em;">${badge.icon}</span><br>${badge.label}`;
+                        }
+                        div.onclick = async function() {
+                            let newBadges = badges.includes(badge.key)
+                                ? badges.filter(b => b !== badge.key)
+                                : badges.concat([badge.key]);
+                            await updateUserProfile(username, { badges: newBadges });
+                            renderBadgesList();
+                        };
+                        badgesList.appendChild(div);
+                    });
+                }
+                document.addEventListener('DOMContentLoaded', renderBadgesList);
+                document.getElementById('profile-section').addEventListener('show', renderBadgesList);
+                </script>
+                </div>
+            </div>
+        </div>
+        <div id="staff-section" style="display:none;">
+            <div style="background:#181b22;padding:32px 28px;border-radius:18px;box-shadow:0 4px 32px #0006;min-width:340px;max-width:600px;margin:32px auto;">
+                <div style="color:#fff;font-weight:700;font-size:1.3rem;margin-bottom:18px;">Registered Users</div>
+                <div id="users-list" style="color:#a1a1aa;font-size:1.08rem;"></div>
+            </div>
+        </div>
+        </div>
+        <!-- Login Overlay -->
+        <div id="login-overlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(14,16,20,0.98);z-index:1000;display:flex;align-items:center;justify-content:center;">
+            <div style="background:rgba(18,20,24,0.98);padding:48px 36px;border-radius:22px;box-shadow:0 4px 32px #0008;display:flex;flex-direction:column;align-items:center;min-width:340px;max-width:400px;width:100%;">
+                <div style="margin-bottom:32px;text-align:center;">
+                    <span style="font-size:2.2rem;font-weight:800;color:#fff;letter-spacing:-2px;">Linkr<span style="color:#a3e635;">.lol</span></span>
+                </div>
+                <form id="login-form" style="display:flex;flex-direction:column;align-items:center;width:100%;gap:16px;">
+                    <h2 style="color:#fff;margin-bottom:8px;font-size:1.3rem;font-weight:700;">Sign In</h2>
+                    <input id="username" type="text" placeholder="Username" required style="margin-bottom:0;padding:12px 16px;border-radius:10px;border:none;background:#23272f;color:#fff;width:100%;font-size:1.08rem;outline:none;">
+                    <input id="password" type="password" placeholder="Password" required style="margin-bottom:0;padding:12px 16px;border-radius:10px;border:none;background:#23272f;color:#fff;width:100%;font-size:1.08rem;outline:none;">
+                    <button type="submit" style="background:#3b82f6;color:#fff;padding:12px 0;border:none;border-radius:10px;width:100%;font-size:1.08rem;font-weight:700;cursor:pointer;transition:background 0.2s;">Login</button>
+                    <div id="login-error" style="color:#ef4444;margin-top:6px;display:none;font-size:0.98rem;">Invalid credentials</div>
+                </form>
+                <div style="margin:22px 0 0 0;color:#a1a1aa;font-size:0.98rem;text-align:center;">Don't have an account? <a href="#" id="show-register" style="color:#3b82f6;font-weight:600;">Create one</a></div>
+                <form id="register-form" style="display:none;flex-direction:column;align-items:center;width:100%;margin-top:18px;gap:16px;">
+                    <h2 style="color:#fff;margin-bottom:8px;font-size:1.3rem;font-weight:700;">Create Account</h2>
+                    <input id="reg-username" type="text" placeholder="Username" required style="margin-bottom:0;padding:12px 16px;border-radius:10px;border:none;background:#23272f;color:#fff;width:100%;font-size:1.08rem;outline:none;">
+                    <input id="reg-password" type="password" placeholder="Password" required style="margin-bottom:0;padding:12px 16px;border-radius:10px;border:none;background:#23272f;color:#fff;width:100%;font-size:1.08rem;outline:none;">
+                    <button type="submit" style="background:#3b82f6;color:#fff;padding:12px 0;border:none;border-radius:10px;width:100%;font-size:1.08rem;font-weight:700;cursor:pointer;transition:background 0.2s;">Create Account</button>
+                    <div id="register-error" style="color:#ef4444;margin-top:6px;display:none;font-size:0.98rem;">Username already exists</div>
+                    <div id="register-success" style="color:#22c55e;margin-top:6px;display:none;font-size:0.98rem;">Account created! You can now sign in.</div>
+                </form>
+            </div>
+        </div>
+            <h1>Welcome!</h1>
+            <p>This is a sample sidebar layout.</p>
+        </div>
+    </div>
+</body>
+<!-- Supabase CDN must be loaded before supabase.js -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
+<script src="supabase.js"></script>
+</body>
+<script>
+// --- Supabase Profile Integration ---
+// Always save avatar, even if unchanged
+let lastAvatarBase64 = null;
+document.addEventListener('DOMContentLoaded', function() {
+    // Avatar upload logic
+    const avatarEditBtn = document.getElementById('avatar-edit-btn');
+    const avatarUpload = document.getElementById('avatar-upload');
+    const profileAvatar = document.getElementById('profile-avatar');
+    let avatarBase64 = null;
+    if (avatarEditBtn && avatarUpload && profileAvatar) {
+        avatarEditBtn.addEventListener('click', function() {
+            avatarUpload.click();
+        });
+        avatarUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.size <= 2 * 1024 * 1024) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    profileAvatar.src = evt.target.result;
+                    avatarBase64 = evt.target.result;
+                    lastAvatarBase64 = avatarBase64;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                alert('Avatar must be JPG, PNG, or GIF and less than 2MB.');
+            }
+        });
+    }
+
+    // Save profile to Supabase
+    const saveBtn = document.getElementById('profile-save-btn');
+    if (saveBtn) {
+        saveBtn.addEventListener('click', async function() {
+            const displayName = document.getElementById('profile-displayname').value;
+            const username = document.getElementById('sidebar-username').textContent;
+            const bio = document.getElementById('profile-bio').value;
+            // Save to Supabase
+            try {
+                let profile = {
+                    username: username,
+                    display_name: displayName,
+                    bio: bio,
+                    avatar: avatarBase64 || lastAvatarBase64 || profileAvatar.src
+                };
+                // Upsert profile (insert or update)
+                await insertUserProfile(profile);
+                // Update sidebar and live preview
+                document.getElementById('sidebar-username').textContent = username;
+                document.querySelectorAll('.user-avatar').forEach(img => { img.src = profile.avatar; });
+                document.getElementById('live-preview-bio').textContent = bio;
+                document.querySelectorAll('.user-name').forEach(el => el.textContent = username);
+                // Update live preview avatar
+                const livePreviewAvatar = document.querySelector('#overview-dashboard img[alt="User Avatar"]');
+                if (livePreviewAvatar) livePreviewAvatar.src = profile.avatar;
+                alert('Profile saved!');
+            } catch (err) {
+                alert('Error saving profile: ' + err.message);
+            }
+        });
+    }
+
+    // Load profile from Supabase on profile section open
+    const profileSection = document.getElementById('profile-section');
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        if (link.textContent.trim().startsWith('Profile')) {
+            link.addEventListener('click', async function() {
+                const username = document.getElementById('sidebar-username').textContent;
+                try {
+                    const data = await fetchUserProfile(username);
+                    if (data) {
+                        document.getElementById('profile-displayname').value = data.display_name || username;
+                        document.getElementById('profile-bio').value = data.bio || '';
+                        document.getElementById('profile-username').value = 'linkr.lol/' + username;
+                        if (data.avatar) {
+                            profileAvatar.src = data.avatar;
+                            lastAvatarBase64 = data.avatar;
+                            document.querySelectorAll('.user-avatar').forEach(img => { img.src = data.avatar; });
+                            const livePreviewAvatar = document.querySelector('#overview-dashboard img[alt="User Avatar"]');
+                            if (livePreviewAvatar) livePreviewAvatar.src = data.avatar;
+                        }
+                        document.getElementById('live-preview-bio').textContent = data.bio || '';
+                        document.querySelectorAll('.user_name').forEach(el => el.textContent = data.username);
+                    }
+                } catch (err) {
+                    // No profile found, use defaults
+                }
+            });
+        }
+    });
+});
+
+// On page load, set all .user-avatar images to blank until profile loads
+window.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.user-avatar').forEach(img => { img.src = ''; });
+  const livePreviewAvatar = document.querySelector('#overview-dashboard img[alt="User Avatar"]');
+  if (livePreviewAvatar) livePreviewAvatar.src = '';
+});
+
+// Automatically update live preview and sidebar avatar/bio when profile changes
+function autoSyncProfile() {
+  const displayNameInput = document.getElementById('profile-displayname');
+  const bioInput = document.getElementById('profile-bio');
+  const avatarUpload = document.getElementById('avatar-upload');
+
+  function saveProfile() {
+    const username = document.getElementById('sidebar-username').textContent;
+    const displayName = displayNameInput.value;
+    const bio = bioInput.value;
+    const profileAvatar = document.getElementById('profile-avatar');
+    let avatarBase64 = profileAvatar.src;
+    let profile = {
+      username: username,
+      display_name: displayName,
+      bio: bio,
+      avatar: avatarBase64
+    };
+    insertUserProfile(profile).catch(err => {
+      alert('Error saving profile: ' + err.message);
+    });
+  }
+
+  if (displayNameInput) displayNameInput.addEventListener('input', saveProfile);
+  if (bioInput) bioInput.addEventListener('input', saveProfile);
+  if (avatarUpload) avatarUpload.addEventListener('change', function() {
+    // Wait for avatar to update, then save
+    setTimeout(saveProfile, 500);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', autoSyncProfile);
+// --- End Supabase Profile Integration ---
+// Sidebar navigation click logic
+const overviewBtn = document.querySelector('.nav-link.active');
+const overviewDashboard = document.getElementById('overview-dashboard');
+const mainPlaceholder = document.getElementById('main-placeholder');
+const navLinks = document.querySelectorAll('.nav-link');
+const loginOverlay = document.getElementById('login-overlay');
+const loginForm = document.getElementById('login-form');
+const loginError = document.getElementById('login-error');
+const showRegister = document.getElementById('show-register');
+const registerForm = document.getElementById('register-form');
+const registerError = document.getElementById('register-error');
+const registerSuccess = document.getElementById('register-success');
+
+// Account storage (localStorage for demo)
+function getAccounts() {
+    return JSON.parse(localStorage.getItem('accounts') || '{}');
+}
+function setAccounts(accounts) {
+    localStorage.setItem('accounts', JSON.stringify(accounts));
+}
+
+// Password lock (set this to your desired lock password)
+const SITE_LOCK_PASSWORD = 'letmein';
+
+function showOverview() {
+    overviewDashboard.style.display = 'block';
+    mainPlaceholder.style.display = 'none';
+}
+
+// Set up click events for all nav links
+navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault();
+        navLinks.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+        if (this.textContent.trim().startsWith('Overview')) {
+            showOverview();
+            document.getElementById('profile-section').style.display = 'none';
+        } else if (this.textContent.trim().startsWith('Profile')) {
+            overviewDashboard.style.display = 'none';
+            mainPlaceholder.style.display = 'none';
+            document.getElementById('profile-section').style.display = 'block';
+        } else {
+            overviewDashboard.style.display = 'none';
+            mainPlaceholder.style.display = 'block';
+            document.getElementById('profile-section').style.display = 'none';
+        }
+    });
+});
+
+// Login logic
+function showDashboardAfterLogin() {
+    loginOverlay.style.display = 'none';
+    showOverview();
+    // Update sidebar user info for premium
+    const sidebarUsername = document.getElementById('sidebar-username');
+    const sidebarPlan = document.getElementById('sidebar-plan');
+    const username = document.getElementById('username').value;
+    if (sidebarUsername && sidebarPlan) {
+        sidebarUsername.textContent = username;
+        sidebarPlan.textContent = 'Premium Plan';
+        // Update profile URL display
+        const profileUrlDisplay = document.getElementById('profile-url-display');
+        if (profileUrlDisplay) {
+            profileUrlDisplay.textContent = 'linkr.lol/' + username;
+        }
+        // Show staff button if Ryan/12
+        const staffBtn = document.querySelector('.staff-link');
+        let accounts = getAccounts();
+        if (username === 'Ryan' && accounts['Ryan'] === '12') {
+            staffBtn.style.display = 'block';
+        } else {
+            staffBtn.style.display = 'none';
+        }
+    }
+}
+
+loginForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const accounts = getAccounts();
+    if (accounts[username] && accounts[username] === password) {
+        loginError.style.display = 'none';
+        showDashboardAfterLogin();
+    } else {
+        loginError.style.display = 'block';
+    }
+});
+
+showRegister.addEventListener('click', function(e) {
+    e.preventDefault();
+    loginForm.style.display = 'none';
+    registerForm.style.display = 'flex';
+    registerError.style.display = 'none';
+    registerSuccess.style.display = 'none';
+});
+
+registerForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const username = document.getElementById('reg-username').value;
+    const password = document.getElementById('reg-password').value;
+    let accounts = getAccounts();
+    if (accounts[username]) {
+        registerError.style.display = 'block';
+        registerSuccess.style.display = 'none';
+    } else {
+        accounts[username] = password;
+        setAccounts(accounts);
+        registerError.style.display = 'none';
+        registerSuccess.style.display = 'block';
+        setTimeout(() => {
+            registerForm.style.display = 'none';
+            loginForm.style.display = 'flex';
+        }, 1200);
+    }
+});
+
+// Show login overlay when landing login button is clicked
+const landingLoginBtn = document.getElementById('landing-login');
+if (landingLoginBtn && loginOverlay) {
+  landingLoginBtn.addEventListener('click', function(e) {
+    e.preventDefault();
+    loginOverlay.style.display = 'flex';
+    document.getElementById('landing-area').style.display = 'none';
+  });
+}
+
+// Hide dashboard and show login on load
+overviewDashboard.style.display = 'none';
+mainPlaceholder.style.display = 'none';
+document.getElementById('profile-section').style.display = 'none';
+loginOverlay.style.display = 'flex';
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Show Staff button only for Ryan with password 12
+    const sidebarUsername = document.getElementById('sidebar-username');
+    const staffBtn = document.querySelector('.staff-link');
+    const staffSection = document.getElementById('staff-section');
+    const mainContent = document.querySelector('.main-content');
+    // Check login credentials from localStorage
+    let accounts = JSON.parse(localStorage.getItem('accounts') || '{}');
+    let loggedInUser = sidebarUsername ? sidebarUsername.textContent.trim() : '';
+    let isRyanStaff = (loggedInUser === 'Ryan' && accounts['Ryan'] === '12');
+    // Update profile URL display on page load
+    const profileUrlDisplay = document.getElementById('profile-url-display');
+    if (profileUrlDisplay && loggedInUser) {
+        profileUrlDisplay.textContent = 'linkr.lol/' + loggedInUser;
+    }
+    if (sidebarUsername && staffBtn) {
+        if (isRyanStaff) {
+            staffBtn.style.display = 'block';
+        } else {
+            staffBtn.style.display = 'none';
+        }
+        staffBtn.addEventListener('click', async function(e) {
+            e.preventDefault();
+            // Hide other sections
+            document.getElementById('overview-dashboard').style.display = 'none';
+            document.getElementById('profile-section').style.display = 'none';
+            document.getElementById('main-placeholder').style.display = 'none';
+            staffSection.style.display = 'block';
+            // Fetch users from Supabase
+            try {
+                const { data, error } = await supabaseClient
+                    .from('profiles')
+                    .select('username');
+                if (error) {
+                    document.getElementById('users-list').textContent = 'Error loading users.';
+                } else if (data && data.length > 0) {
+                    document.getElementById('users-list').innerHTML = data.map(u => `<div style='display:flex;align-items:center;gap:10px;margin-bottom:8px;'><span>${u.username}</span><button class='view-user-btn' data-username='${u.username}' style="background:#23272f;color:#60a5fa;border:1px solid #60a5fa;border-radius:6px;padding:4px 16px;font-size:1em;cursor:pointer;font-weight:600;transition:background 0.2s;">View</button><button class='promote-user-btn' data-username='${u.username}' style="background:#23272f;color:#a3e635;border:1px solid #a3e635;border-radius:6px;padding:4px 16px;font-size:1em;cursor:pointer;font-weight:600;transition:background 0.2s;">Promote</button></div>`).join('');
+                    // Attach event listeners after rendering
+                    const usersList = document.getElementById('users-list');
+                    if (usersList) {
+                        usersList.addEventListener('click', async function(e) {
+                            const hoverPanel = document.getElementById('profile-hover-panel');
+                            if (e.target.classList.contains('view-user-btn')) {
+                                const username = e.target.getAttribute('data-username');
+                                // Fetch user profile
+                                let avatar = document.querySelector('.user-avatar') ? document.querySelector('.user-avatar').src : '';
+                                let created = '2025-01-01';
+                                if (window.fetchUserProfile) {
+                                    try {
+                                        const data = await fetchUserProfile(username);
+                                        avatar = data.avatar || avatar;
+                                        created = data.created_at ? new Date(data.created_at).toISOString().slice(0,10) : created;
+                                    } catch {}
+                                }
+                                document.getElementById('hover-profile-avatar').src = avatar;
+                                document.getElementById('hover-profile-username').textContent = username;
+                                document.getElementById('hover-profile-created').textContent = 'Created: ' + created;
+                                hoverPanel.setAttribute('data-username', username);
+                                // Position the panel as a dropdown below the View button
+                                const btnRect = e.target.getBoundingClientRect();
+                                hoverPanel.style.top = (window.scrollY + btnRect.bottom + 6) + 'px';
+                                hoverPanel.style.left = (window.scrollX + btnRect.left) + 'px';
+                                hoverPanel.style.display = 'block';
+                                hoverPanel.style.zIndex = 9999;
+                            } else if (e.target.classList.contains('promote-user-btn')) {
+                                const username = e.target.getAttribute('data-username');
+                                // Show promote modal and load roles
+                                const promoteModalBg = document.getElementById('promote-modal-bg');
+                                promoteModalBg.style.display = 'flex';
+                                promoteModalBg.setAttribute('data-username', username);
+                                // Reset checkboxes
+                                document.getElementById('role-owner').checked = false;
+                                document.getElementById('role-coowner').checked = false;
+                                document.getElementById('role-staff').checked = false;
+                                // Fetch user roles from Supabase
+                                if (window.fetchUserProfile) {
+                                    try {
+                                        const data = await fetchUserProfile(username);
+                                        if (data) {
+                                            document.getElementById('role-owner').checked = !!data.role_owner;
+                                            document.getElementById('role-coowner').checked = !!data.role_coowner;
+                                            document.getElementById('role-staff').checked = !!data.role_staff;
+                                        }
+                                    } catch {}
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    document.getElementById('users-list').textContent = 'No users found.';
+                }
+            } catch (err) {
+                document.getElementById('users-list').textContent = 'Error loading users.';
+            }
+        });
+    // Hide profile panel when clicking outside
+    const hoverPanel = document.getElementById('profile-hover-panel');
+    document.addEventListener('click', function(e) {
+        if (!hoverPanel.contains(e.target) && !e.target.classList.contains('view-user-btn')) {
+            hoverPanel.style.display = 'none';
+        }
+    });
+    }
+});
+</script>
+</html>

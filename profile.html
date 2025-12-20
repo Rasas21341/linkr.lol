@@ -78,7 +78,7 @@
                     window.BADGE_DEFS.filter(b => badges.includes(b.key)).map(badge => {
                         if (badge.img) {
                             if (badge.key === 'premium') {
-                                return `<span class=\"profile-badge\"><img src=\"${badge.img}\" alt=\"${badge.label}\" style=\"width:22px;height:22px;vertical-align:middle;\"></span>`;
+                                return `<span class=\"profile-badge\"><img src=\"${badge.img}\" alt=\"${badge.label}\" title=\"Premium\" style=\"width:22px;height:22px;vertical-align:middle;\"></span>`;
                             } else {
                                 return `<span class=\"profile-badge\"><img src=\"${badge.img}\" alt=\"${badge.label}\" style=\"width:22px;height:22px;vertical-align:middle;\"> ${badge.label}</span>`;
                             }

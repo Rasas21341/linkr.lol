@@ -138,6 +138,41 @@
                         </div>
                     </div>
                     <script>
+                    // Update all profile UI elements (sidebar, live preview, profile section)
+                    function updateAllProfileUI(profile, usernameFallback) {
+                        const defaultAvatar = 'https://randomuser.me/api/portraits/men/32.jpg';
+                        const avatar = (profile && profile.avatar && profile.avatar.startsWith('data:image')) ? profile.avatar : defaultAvatar;
+                        // Always use the usernameFallback (from login) as the source of truth
+                        const username = usernameFallback || profile?.username || '';
+                        const displayName = profile?.display_name || username;
+                        const bio = profile?.bio || '';
+
+                        // Sidebar
+                        document.getElementById('sidebar-username').textContent = username;
+                        document.querySelectorAll('.user-avatar').forEach(img => { img.src = avatar; });
+                        // Main dashboard profile image (top of dashboard)
+                        const dashboardProfileImg = document.querySelector('#overview-dashboard > div > img.user-avatar');
+                        if (dashboardProfileImg) dashboardProfileImg.src = avatar;
+                        // Profile section
+                        const profileAvatar = document.getElementById('profile-avatar');
+                        if (profileAvatar) profileAvatar.src = avatar;
+                        const displayNameInput = document.getElementById('profile-displayname');
+                        if (displayNameInput) displayNameInput.value = displayName;
+                        const bioInput = document.getElementById('profile-bio');
+                        if (bioInput) bioInput.value = bio;
+                        const profileUsernameInput = document.getElementById('profile-username');
+                        if (profileUsernameInput) profileUsernameInput.value = 'linkr.lol/' + username;
+                        // Also update the profile URL display if present
+                        const profileUrlDisplay = document.getElementById('profile-url-display');
+                        if (profileUrlDisplay) profileUrlDisplay.textContent = 'linkr.lol/' + username;
+                        // Live preview (inside dashboard)
+                        const livePreviewAvatar = document.querySelector('#overview-dashboard div[style*="background:#11131a"] img[alt="User Avatar"]');
+                        if (livePreviewAvatar) livePreviewAvatar.src = avatar;
+                        const livePreviewName = document.querySelector('#overview-dashboard div[style*="font-size: 1.1rem"]');
+                        if (livePreviewName) livePreviewName.textContent = displayName;
+                        const livePreviewBio = document.getElementById('live-preview-bio');
+                        if (livePreviewBio) livePreviewBio.textContent = bio;
+                    }
                     // (Sidebar username View button logic removed. Staff user list logic is below.)
                     document.getElementById('save-role-btn').onclick = async function() {
                         // Save role logic to Supabase
@@ -180,12 +215,12 @@
     <div class="main-content">
         <div id="overview-dashboard" style="display: none;">
             <div style="display: flex; align-items: center; background: #181b22; border-radius: 18px; padding: 24px 32px; margin-bottom: 24px;">
-                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="User Avatar" style="width: 56px; height: 56px; border-radius: 50%; border: 3px solid #23272f; margin-right: 24px;">
+                <img class="user-avatar" src="https://randomuser.me/api/portraits/men/32.jpg" alt="User Avatar" style="width: 56px; height: 56px; border-radius: 50%; border: 3px solid #23272f; margin-right: 24px;">
                 <div>
-                    <div style="font-size: 1.5rem; font-weight: 700; color: #fff;">Welcome back, theboyrp1234</div>
+                    <div id="dashboard-welcome" style="font-size: 1.5rem; font-weight: 700; color: #fff;">Welcome back, </div>
                     <div style="color: #9ca3af; font-size: 1rem;">Manage your profile and track your performance</div>
                 </div>
-                <a href="#" style="margin-left:auto; color:#d1d5db; font-size:0.95rem; text-decoration:none; border:1px solid #23272f; border-radius:8px; padding:8px 18px;">View Profile</a>
+                <a id="dashboard-view-profile" href="#" style="margin-left:auto; color:#d1d5db; font-size:0.95rem; text-decoration:none; border:1px solid #23272f; border-radius:8px; padding:8px 18px;">View Profile</a>
             </div>
             <div style="background:#181b22; border-radius:14px; padding:18px 28px; margin-bottom:18px; display:flex; align-items:center; gap:18px;">
                 <div style="color:#6b7280; font-size:0.95rem;">YOUR PROFILE URL</div>
@@ -356,14 +391,12 @@
             </div>
         </div>
             <h1>Welcome!</h1>
-            <p>This is a sample sidebar layout.</p>
+              <p>This is a sample sidebar layout. Enjoy exploring!</p>
         </div>
     </div>
-</body>
 <!-- Supabase CDN must be loaded before supabase.js -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.7/dist/umd/supabase.min.js"></script>
 <script src="supabase.js"></script>
-</body>
 <script>
 // --- Supabase Profile Integration ---
 // Always save avatar, even if unchanged
@@ -459,9 +492,30 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // On page load, set all .user-avatar images to blank until profile loads
 window.addEventListener('DOMContentLoaded', function() {
-  document.querySelectorAll('.user-avatar').forEach(img => { img.src = ''; });
-  const livePreviewAvatar = document.querySelector('#overview-dashboard img[alt="User Avatar"]');
-  if (livePreviewAvatar) livePreviewAvatar.src = '';
+    document.querySelectorAll('.user-avatar').forEach(img => { img.src = ''; });
+    // Auto-load and set the correct user avatar on page load
+    const username = document.getElementById('sidebar-username')?.textContent;
+    const defaultAvatar = 'https://randomuser.me/api/portraits/men/32.jpg';
+    if (username) {
+        fetchUserProfile(username).then(profile => {
+            let avatar = (profile && profile.avatar) ? profile.avatar : defaultAvatar;
+            document.querySelectorAll('.user-avatar').forEach(img => { img.src = avatar; });
+            const profileAvatar = document.getElementById('profile-avatar');
+            if (profileAvatar) profileAvatar.src = avatar;
+            const livePreviewAvatar = document.querySelector('#overview-dashboard img[alt="User Avatar"]');
+            if (livePreviewAvatar) livePreviewAvatar.src = avatar;
+        }).catch(() => {
+            // On error, use default avatar
+            document.querySelectorAll('.user-avatar').forEach(img => { img.src = defaultAvatar; });
+            const profileAvatar = document.getElementById('profile-avatar');
+            if (profileAvatar) profileAvatar.src = defaultAvatar;
+            const livePreviewAvatar = document.querySelector('#overview-dashboard img[alt="User Avatar"]');
+            if (livePreviewAvatar) livePreviewAvatar.src = defaultAvatar;
+        });
+    } else {
+        const livePreviewAvatar = document.querySelector('#overview-dashboard img[alt="User Avatar"]');
+        if (livePreviewAvatar) livePreviewAvatar.src = defaultAvatar;
+    }
 });
 
 // Automatically update live preview and sidebar avatar/bio when profile changes
@@ -511,13 +565,15 @@ const registerError = document.getElementById('register-error');
 const registerSuccess = document.getElementById('register-success');
 
 // Account storage (localStorage for demo)
-function getAccounts() {
-    return JSON.parse(localStorage.getItem('accounts') || '{}');
-}
-function setAccounts(accounts) {
-    localStorage.setItem('accounts', JSON.stringify(accounts));
-}
+// getAccounts and setAccounts are no longer used for login
 
+// Show dashboard and hide login overlay after successful login
+function showDashboardAfterLogin() {
+    document.getElementById('overview-dashboard').style.display = 'block';
+    document.getElementById('main-placeholder').style.display = 'none';
+    document.getElementById('profile-section').style.display = 'none';
+    document.getElementById('login-overlay').style.display = 'none';
+}
 // Password lock (set this to your desired lock password)
 const SITE_LOCK_PASSWORD = 'letmein';
 
@@ -539,52 +595,48 @@ navLinks.forEach(link => {
             overviewDashboard.style.display = 'none';
             mainPlaceholder.style.display = 'none';
             document.getElementById('profile-section').style.display = 'block';
-        } else {
-            overviewDashboard.style.display = 'none';
-            mainPlaceholder.style.display = 'block';
-            document.getElementById('profile-section').style.display = 'none';
         }
     });
 });
-
-// Login logic
-function showDashboardAfterLogin() {
-    loginOverlay.style.display = 'none';
-    showOverview();
-    // Update sidebar user info for premium
-    const sidebarUsername = document.getElementById('sidebar-username');
-    const sidebarPlan = document.getElementById('sidebar-plan');
-    const username = document.getElementById('username').value;
-    if (sidebarUsername && sidebarPlan) {
-        sidebarUsername.textContent = username;
-        sidebarPlan.textContent = 'Premium Plan';
-        // Update profile URL display
-        const profileUrlDisplay = document.getElementById('profile-url-display');
-        if (profileUrlDisplay) {
-            profileUrlDisplay.textContent = 'linkr.lol/' + username;
-        }
-        // Show staff button if Ryan/12
-        const staffBtn = document.querySelector('.staff-link');
-        let accounts = getAccounts();
-        if (username === 'Ryan' && accounts['Ryan'] === '12') {
-            staffBtn.style.display = 'block';
-        } else {
-            staffBtn.style.display = 'none';
-        }
-    }
-}
 
 loginForm.addEventListener('submit', function(e) {
     e.preventDefault();
     const username = document.getElementById('username').value;
     const password = document.getElementById('password').value;
-    const accounts = getAccounts();
-    if (accounts[username] && accounts[username] === password) {
-        loginError.style.display = 'none';
-        showDashboardAfterLogin();
-    } else {
-        loginError.style.display = 'block';
-    }
+    // Check credentials against Supabase 'users' table
+    (async () => {
+        try {
+            console.log('Logging in with:', { username, password });
+            const { data, error } = await supabaseClient
+                .from('users')
+                .select('*')
+                .eq('username', username)
+                .single();
+            console.log('Login response:', { data, error });
+            if (error || !data) {
+                alert('Login failed: ' + (error?.message || 'User not found'));
+                loginError.style.display = 'block';
+                return;
+            }
+            // Compare password (plain text, not secure for production)
+            if (data.password === password) {
+                alert('Login successful!');
+                loginError.style.display = 'none';
+                // Fetch and update live preview avatar, username, and bio
+                fetchUserProfile(username).then(profile => {
+                    console.log('Fetched profile after login:', profile);
+                    updateAllProfileUI(profile, username);
+                });
+                showDashboardAfterLogin();
+            } else {
+                alert('Login failed: Incorrect password');
+                loginError.style.display = 'block';
+            }
+        } catch (err) {
+            alert('Login error: ' + (err.message || 'Unknown error'));
+            loginError.style.display = 'block';
+        }
+    })();
 });
 
 showRegister.addEventListener('click', function(e) {
@@ -599,20 +651,57 @@ registerForm.addEventListener('submit', function(e) {
     e.preventDefault();
     const username = document.getElementById('reg-username').value;
     const password = document.getElementById('reg-password').value;
-    let accounts = getAccounts();
-    if (accounts[username]) {
-        registerError.style.display = 'block';
-        registerSuccess.style.display = 'none';
-    } else {
-        accounts[username] = password;
-        setAccounts(accounts);
-        registerError.style.display = 'none';
-        registerSuccess.style.display = 'block';
-        setTimeout(() => {
-            registerForm.style.display = 'none';
-            loginForm.style.display = 'flex';
-        }, 1200);
-    }
+    // Register user in Supabase 'users' table
+    (async () => {
+        try {
+            // Check if username already exists
+            const { data: existing, error: fetchError } = await supabaseClient
+                .from('users')
+                .select('username')
+                .eq('username', username)
+                .single();
+            if (existing) {
+                registerError.textContent = 'Username already exists';
+                registerError.style.display = 'block';
+                registerSuccess.style.display = 'none';
+                return;
+            }
+            // If error is present but no data, allow registration (username not taken)
+            try {
+                console.log('Registering user:', { username, password });
+                const { data, error } = await supabaseClient
+                    .from('users')
+                    .insert([{ username, password }]);
+                if (error) {
+                    alert('Registration failed: ' + error.message);
+                    registerError.textContent = 'Registration failed: ' + error.message;
+                    registerError.style.display = 'block';
+                    registerSuccess.style.display = 'none';
+                    return;
+                }
+                console.log('Registration response:', data);
+                alert('Account created! You can now sign in.');
+                registerError.style.display = 'none';
+                registerSuccess.style.display = 'block';
+                setTimeout(() => {
+                    registerForm.style.display = 'none';
+                    loginForm.style.display = 'flex';
+                }, 1200);
+            } catch (regErr) {
+                console.error('Registration error:', regErr);
+                alert('Registration failed: ' + (regErr.message || regErr.error_description || 'Unknown error'));
+                registerError.textContent = 'Registration failed: ' + (regErr.message || regErr.error_description || 'Unknown error');
+                registerError.style.display = 'block';
+                registerSuccess.style.display = 'none';
+            }
+        } catch (err) {
+            console.error('User check error:', err);
+            alert('Error checking username: ' + (err.message || err.error_description || 'Unknown error'));
+            registerError.textContent = 'Error checking username: ' + (err.message || err.error_description || 'Unknown error');
+            registerError.style.display = 'block';
+            registerSuccess.style.display = 'none';
+        }
+    })();
 });
 
 // Show login overlay when landing login button is clicked

@@ -62,7 +62,7 @@ body {
 }
 
 .sidebar .settings-link {
-    margin-top: 18px;
+    margin-top: 0;
 }
 
 .sidebar .nav-link.settings.active, .sidebar .nav-link.settings:hover {

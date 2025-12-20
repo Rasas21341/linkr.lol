@@ -221,6 +221,18 @@
                     <div style="color: #9ca3af; font-size: 1rem;">Manage your profile and track your performance</div>
                 </div>
                 <a id="dashboard-view-profile" href="#" style="margin-left:auto; color:#d1d5db; font-size:0.95rem; text-decoration:none; border:1px solid #23272f; border-radius:8px; padding:8px 18px;">View Profile</a>
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const viewProfileBtn = document.getElementById('dashboard-view-profile');
+                if (viewProfileBtn) {
+                    viewProfileBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const username = document.getElementById('sidebar-username').textContent.trim();
+                        window.location.href = `profile.html?username=${encodeURIComponent(username)}`;
+                    });
+                }
+            });
+            </script>
             </div>
             <div style="background:#181b22; border-radius:14px; padding:18px 28px; margin-bottom:18px; display:flex; align-items:center; gap:18px;">
                 <div style="color:#6b7280; font-size:0.95rem;">YOUR PROFILE URL</div>

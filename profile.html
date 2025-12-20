@@ -48,7 +48,7 @@
         const username = getUsernameFromHash();
         const container = document.getElementById('profile-container');
         if (!username) {
-            container.innerHTML = '<div>No username provided.</div>';
+            container.innerHTML = '';
             return;
         }
         try {
@@ -61,11 +61,10 @@
                 profile = await fetchUserProfile(username.toUpperCase());
             }
             if (!profile) {
-                container.innerHTML = '<div>Profile not found.</div>';
+                container.innerHTML = '';
                 return;
             }
             const avatar = profile.avatar || 'https://randomuser.me/api/portraits/men/32.jpg';
-            const bio = profile.bio || '';
             const badges = Array.isArray(profile.badges) ? profile.badges : [];
             let badgeHtml = '';
             if (badges.length > 0) {
@@ -83,11 +82,10 @@
             container.innerHTML = `
                 <img class="profile-avatar" src="${avatar}" alt="Avatar">
                 <div class="profile-username">${profile.username || username}</div>
-                <div class="profile-bio">${bio}</div>
                 ${badgeHtml}
             `;
         } catch (err) {
-            container.innerHTML = '<div>Error loading profile.</div>';
+            container.innerHTML = '';
         }
     }
 

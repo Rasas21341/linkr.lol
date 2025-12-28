@@ -93,13 +93,14 @@
                     }).join('') + '</div>';
             }
             // Render links if present
-            let linksHtml = '';
+            let linksHtml = '<div style="margin-top:28px;text-align:left;">'
+                + '<div style="color:#fff;font-weight:600;margin-bottom:10px;">Links</div>';
             if (Array.isArray(profile.links) && profile.links.length > 0) {
-                linksHtml = '<div style="margin-top:28px;text-align:left;">'
-                  + '<div style="color:#fff;font-weight:600;margin-bottom:10px;">Links</div>'
-                  + profile.links.map(l => `<div style='background:#23272f;padding:10px 14px;border-radius:8px;margin-bottom:8px;'><a href='${l.url}' target='_blank' style='color:#60a5fa;font-weight:600;text-decoration:none;'>${l.title}</a></div>`).join('')
-                  + '</div>';
+                linksHtml += profile.links.map(l => `<div style='background:#23272f;padding:10px 14px;border-radius:8px;margin-bottom:8px;'><a href='${l.url}' target='_blank' style='color:#60a5fa;font-weight:600;text-decoration:none;'>${l.title}</a></div>`).join('');
+            } else {
+                linksHtml += '<div style="color:#a1a1aa;">No links found for this user.</div>';
             }
+            linksHtml += '</div>';
             container.innerHTML = `
                 ${avatar}
                 ${usernameHtml}

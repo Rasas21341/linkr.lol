@@ -316,7 +316,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <div style="background:#181b22; border-radius:14px; padding:18px;">
                         <div style="color:#fff; font-weight:600; margin-bottom:10px;">Quick Actions</div>
                         <div style="display:flex; flex-direction:column; gap:10px;">
-                            <div style="display:flex; align-items:center; background:#23272f; border-radius:8px; padding:10px 16px; color:#fff; gap:12px; font-weight:500;"><span style="background:#ef4444; color:#fff; border-radius:6px; padding:4px 8px; font-size:1.1em; margin-right:8px;">+</span>Add New Link <span style="color:#a1a1aa; font-size:0.95em; margin-left:auto;">Create a new link for your profile</span></div>
+                            <div id="add-new-link-btn" style="display:flex; align-items:center; background:#23272f; border-radius:8px; padding:10px 16px; color:#fff; gap:12px; font-weight:500; cursor:pointer;"><span style="background:#ef4444; color:#fff; border-radius:6px; padding:4px 8px; font-size:1.1em; margin-right:8px;">+</span>Add New Link <span style="color:#a1a1aa; font-size:0.95em; margin-left:auto;">Create a new link for your profile</span></div>
                             <div style="display:flex; align-items:center; background:#23272f; border-radius:8px; padding:10px 16px; color:#fff; gap:12px; font-weight:500;"><span style="background:#a78bfa; color:#fff; border-radius:6px; padding:4px 8px; font-size:1.1em; margin-right:8px;">🎨</span>Customize Theme <span style="color:#a1a1aa; font-size:0.95em; margin-left:auto;">Change colors and effects</span></div>
                             <div style="display:flex; align-items:center; background:#23272f; border-radius:8px; padding:10px 16px; color:#fff; gap:12px; font-weight:500;"><span style="background:#f472b6; color:#fff; border-radius:6px; padding:4px 8px; font-size:1.1em; margin-right:8px;">👤</span>Edit Profile <span style="color:#a1a1aa; font-size:0.95em; margin-left:auto;">Update bio and avatar</span></div>
                             <div style="display:flex; align-items:center; background:#23272f; border-radius:8px; padding:10px 16px; color:#fff; gap:12px; font-weight:500;"><span style="background:#34d399; color:#fff; border-radius:6px; padding:4px 8px; font-size:1.1em; margin-right:8px;">📝</span>Change Log <span style="color:#a1a1aa; font-size:0.95em; margin-left:auto;">View recent updates</span></div>
@@ -324,7 +324,57 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div style="background:#181b22; border-radius:14px; padding:18px; min-height:100px;">
                         <div style="color:#fff; font-weight:600; margin-bottom:10px;">Top Performing Links</div>
-                        <div style="color:#a1a1aa;">No links yet. <a href="#" style="color:#ef4444;">Add your first link</a></div>
+                        <div id="top-links-list" style="color:#a1a1aa;"></div>
+                        <div id="no-links-msg" style="color:#a1a1aa;">No links yet. <a href="#" id="add-first-link-btn" style="color:#ef4444;">Add your first link</a></div>
+                                <!-- Add Link Modal -->
+                                <div id="add-link-modal-bg" style="display:none; position:fixed; z-index:5000; left:0; top:0; width:100vw; height:100vh; background:rgba(16,18,24,0.85); align-items:center; justify-content:center;">
+                                    <div id="add-link-modal" style="background:#101426; border-radius:18px; padding:32px 32px 24px 32px; min-width:320px; max-width:95vw; box-shadow:0 4px 32px #000a; color:#fff; position:relative;">
+                                        <button class="close-btn" onclick="document.getElementById('add-link-modal-bg').style.display='none'" style="position:absolute;top:16px;right:18px;background:none;border:none;color:#b3b8c5;font-size:1.5rem;cursor:pointer;">&times;</button>
+                                        <h2 style="margin:0 0 18px 0;font-size:1.2rem;font-weight:700;">Add a New Link</h2>
+                                        <div style="display:flex;flex-direction:column;gap:14px;margin-bottom:18px;">
+                                            <input id="new-link-title" type="text" placeholder="Link Title" style="padding:10px 14px;border-radius:8px;border:none;background:#23272f;color:#fff;font-size:1rem;">
+                                            <input id="new-link-url" type="text" placeholder="https://yourlink.com" style="padding:10px 14px;border-radius:8px;border:none;background:#23272f;color:#fff;font-size:1rem;">
+                                        </div>
+                                        <button id="save-link-btn" style="background:#22c55e;color:#fff;font-size:1rem;font-weight:600;padding:10px 0;border-radius:10px;border:none;width:100%;cursor:pointer;">Add Link</button>
+                                    </div>
+                                </div>
+                        <script>
+                        // --- Link Modal Logic ---
+                        document.addEventListener('DOMContentLoaded', function() {
+                            const addLinkModalBg = document.getElementById('add-link-modal-bg');
+                            const addNewLinkBtn = document.getElementById('add-new-link-btn');
+                            const addFirstLinkBtn = document.getElementById('add-first-link-btn');
+                            if (addNewLinkBtn) addNewLinkBtn.onclick = () => { addLinkModalBg.style.display = 'flex'; };
+                            if (addFirstLinkBtn) addFirstLinkBtn.onclick = () => { addLinkModalBg.style.display = 'flex'; };
+
+                            // Store links in memory for demo (replace with Supabase for persistence)
+                            let links = [];
+                            function renderLinks() {
+                                const topLinksList = document.getElementById('top-links-list');
+                                const noLinksMsg = document.getElementById('no-links-msg');
+                                if (links.length === 0) {
+                                    topLinksList.innerHTML = '';
+                                    noLinksMsg.style.display = '';
+                                } else {
+                                    topLinksList.innerHTML = links.map(l => `<div style='background:#23272f;padding:10px 14px;border-radius:8px;margin-bottom:8px;'><a href='${l.url}' target='_blank' style='color:#60a5fa;font-weight:600;text-decoration:none;'>${l.title}</a></div>`).join('');
+                                    noLinksMsg.style.display = 'none';
+                                }
+                            }
+                            const saveBtn = document.getElementById('save-link-btn');
+                            if (saveBtn) saveBtn.onclick = function() {
+                                const title = document.getElementById('new-link-title').value.trim();
+                                const url = document.getElementById('new-link-url').value.trim();
+                                if (!title || !url) { alert('Please enter both title and URL.'); return; }
+                                links.unshift({ title, url });
+                                renderLinks();
+                                addLinkModalBg.style.display = 'none';
+                                document.getElementById('new-link-title').value = '';
+                                document.getElementById('new-link-url').value = '';
+                                // TODO: Also update profile section if needed
+                            };
+                            renderLinks();
+                        });
+                        </script>
                         <a href="#" style="color:#ef4444; float:right; font-size:0.95em;">View Analytics</a>
                     </div>
                 </div>

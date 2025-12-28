@@ -35,9 +35,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     inlineScript.textContent = script.textContent;
                     document.body.appendChild(inlineScript);
                 });
-                // Set username for profile logic
+                // Set username for profile logic (clean URL, no query string)
                 window.history.replaceState({}, '', '/' + path);
-                window.location.search = '?username=' + encodeURIComponent(path);
             });
     }
 });

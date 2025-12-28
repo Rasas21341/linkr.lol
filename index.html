@@ -346,8 +346,17 @@ document.addEventListener('DOMContentLoaded', function() {
                             if (addNewLinkBtn) addNewLinkBtn.onclick = () => { addLinkModalBg.style.display = 'flex'; };
                             if (addFirstLinkBtn) addFirstLinkBtn.onclick = () => { addLinkModalBg.style.display = 'flex'; };
 
-                            // Store links in memory for demo (replace with Supabase for persistence)
+                            // Load and save links to Supabase
                             let links = [];
+                            async function loadLinks() {
+                                const username = document.getElementById('sidebar-username')?.textContent?.trim();
+                                if (!username) return;
+                                try {
+                                    const profile = await fetchUserProfile(username);
+                                    links = Array.isArray(profile?.links) ? profile.links : [];
+                                    renderLinks();
+                                } catch (e) { links = []; renderLinks(); }
+                            }
                             function renderLinks() {
                                 const topLinksList = document.getElementById('top-links-list');
                                 const noLinksMsg = document.getElementById('no-links-msg');
@@ -360,18 +369,26 @@ document.addEventListener('DOMContentLoaded', function() {
                                 }
                             }
                             const saveBtn = document.getElementById('save-link-btn');
-                            if (saveBtn) saveBtn.onclick = function() {
+                            if (saveBtn) saveBtn.onclick = async function() {
                                 const title = document.getElementById('new-link-title').value.trim();
                                 const url = document.getElementById('new-link-url').value.trim();
                                 if (!title || !url) { alert('Please enter both title and URL.'); return; }
-                                links.unshift({ title, url });
-                                renderLinks();
-                                addLinkModalBg.style.display = 'none';
-                                document.getElementById('new-link-title').value = '';
-                                document.getElementById('new-link-url').value = '';
-                                // TODO: Also update profile section if needed
+                                const username = document.getElementById('sidebar-username')?.textContent?.trim();
+                                if (!username) { alert('No username found.'); return; }
+                                try {
+                                    // Fetch latest links, add new one to front
+                                    const profile = await fetchUserProfile(username);
+                                    let userLinks = Array.isArray(profile?.links) ? profile.links : [];
+                                    userLinks.unshift({ title, url });
+                                    await updateUserProfile(username, { links: userLinks });
+                                    links = userLinks;
+                                    renderLinks();
+                                    addLinkModalBg.style.display = 'none';
+                                    document.getElementById('new-link-title').value = '';
+                                    document.getElementById('new-link-url').value = '';
+                                } catch (e) { alert('Error saving link: ' + (e.message || e)); }
                             };
-                            renderLinks();
+                            loadLinks();
                         });
                         </script>
                         <a href="#" style="color:#ef4444; float:right; font-size:0.95em;">View Analytics</a>
